@@ -85,6 +85,23 @@ const Layout = () => {
     }
   };
 
+  const handleRead = (item) => {
+    // handle read action
+
+    set_loading(true);
+    const index = dataSource.findIndex((data) => data.id === item.id);
+    const data = {
+      ...item,
+      active: 0,
+    };
+    const new_dataSource = [...dataSource];
+    new_dataSource.splice(index, 1, data);
+    setTimeout(() => {
+      set_loading(false);
+      set_dataSource(new_dataSource);
+    }, 800);
+  };
+
   const myFolders = [
     {
       text: "Inbox",
@@ -202,7 +219,6 @@ const Layout = () => {
                       : true)
                   : data.folderId === activeFolder
               )
-              .sort((a, b) => b.active - a.active)
               .map((item) => (
                 <Grid
                   item
@@ -213,7 +229,12 @@ const Layout = () => {
                   }`}
                 >
                   <Grid container spacing={0}>
-                    <Grid item xs={8}>
+                    <Grid
+                      item
+                      xs={8}
+                      onClick={() => handleRead(item)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <Typography
                         variant={item.active ? "subtitle2" : "body2"}
                         className={classes.ellipsis}
